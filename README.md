@@ -6,7 +6,7 @@ Dropwizard Riak
 [![GitHub license](https://img.shields.io/github/license/smoketurner/dropwizard-riak.svg?style=flat-square)](https://github.com/smoketurner/dropwizard-riak/tree/master)
 
 
-`dropwizard-riak` is a [Dropwizard](http://dropwizard.io) bundle for interacting with [Riak](http://www.basho.com/riak) using the [riak-java-client](https://github.com/basho/riak-java-client].
+`dropwizard-riak` is a [Dropwizard](http://dropwizard.io) bundle for interacting with [Riak](http://www.basho.com/riak) using the [riak-java-client](https://github.com/basho/riak-java-client).
 
 
 Usage
