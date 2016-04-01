@@ -12,7 +12,29 @@ Dropwizard Riak
 Usage
 -----
 
-TBD
+Within your `Configuration` class, add the following:
+
+```java
+@Valid
+@NotNull
+@JsonProperty
+private final RiakConfiguration riak = new RiakConfiguration();
+
+@JsonProperty
+public RiakConfiguration getRiak() {
+    return riak;
+}
+```
+
+Then with your `Application` class' `run()` method, you can access a `RiakClient` by doing the following:
+
+```java
+@Override
+public void run(MyConfiguration configuration, Environment environment) throws Exception {
+    RiakConfiguration riakConfig = configuration.getRiak();
+    RiakClient client = riakConfig.build(environment);
+}
+```
 
 Maven Artifacts
 ---------------
