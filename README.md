@@ -1,6 +1,6 @@
 Dropwizard Riak
 ===============
-[![Build Status](https://travis-ci.org/smoketurner/dropwizard-riak.svg?branch=master)](https://travis-ci.org/dropwizard/dropwizard-protobuf)
+[![Build Status](https://travis-ci.org/smoketurner/dropwizard-riak.svg?branch=master)](https://travis-ci.org/smoketurner/dropwizard-riak)
 [![Coverage Status](https://coveralls.io/repos/smoketurner/dropwizard-riak/badge.svg?branch=master)](https://coveralls.io/r/smoketurner/dropwizard-riak?branch=master)
 [![Maven Central](https://img.shields.io/maven-central/v/com.smoketurner.dropwizard/dropwizard-riak.svg?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/com.smoketurner.dropwizard/dropwizard-riak/)
 [![GitHub license](https://img.shields.io/github/license/smoketurner/dropwizard-riak.svg?style=flat-square)](https://github.com/smoketurner/dropwizard-riak/tree/master)
