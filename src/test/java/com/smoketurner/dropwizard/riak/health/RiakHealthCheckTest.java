@@ -26,7 +26,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import com.basho.riak.client.api.RiakClient;
-import com.basho.riak.client.core.FutureOperation;
 import com.basho.riak.client.core.RiakCluster;
 import com.basho.riak.client.core.operations.PingOperation;
 import com.codahale.metrics.health.HealthCheck.Result;
