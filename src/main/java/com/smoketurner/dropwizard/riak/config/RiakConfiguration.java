@@ -55,16 +55,15 @@ public class RiakConfiguration {
     private String keyStore;
 
     @Min(1)
-    @NotNull
-    private Integer minConnections = 10;
+    private int minConnections = 10;
 
     @Min(0)
-    @NotNull
-    private Integer maxConnections = RiakNode.Builder.DEFAULT_MAX_CONNECTIONS;
+    private int maxConnections = RiakNode.Builder.DEFAULT_MAX_CONNECTIONS;
 
     @Min(1)
-    @NotNull
-    private Integer executionAttempts = RiakCluster.Builder.DEFAULT_EXECUTION_ATTEMPTS;
+    private int executionAttempts = RiakCluster.Builder.DEFAULT_EXECUTION_ATTEMPTS;
+
+    private boolean blockOnMaxConnections = false;
 
     @NotNull
     @MinDuration(value = 1, unit = TimeUnit.MILLISECONDS)
@@ -175,7 +174,7 @@ public class RiakConfiguration {
                 .withConnectionTimeout(
                         Ints.checkedCast(connectionTimeout.toMilliseconds()))
                 .withIdleTimeout(Ints.checkedCast(idleTimeout.toMilliseconds()))
-                .withBlockOnMaxConnections(false);
+                .withBlockOnMaxConnections(blockOnMaxConnections);
 
         if (!Strings.isNullOrEmpty(username) && !Strings.isNullOrEmpty(password)
                 && !Strings.isNullOrEmpty(keyStore)) {

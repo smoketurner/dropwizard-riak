@@ -7,7 +7,7 @@
 
     <groupId>com.smoketurner.dropwizard</groupId>
     <artifactId>dropwizard-riak</artifactId>
-    <version>1.0.0-rc2-1-SNAPSHOT</version>
+    <version>1.0.0-rc3-1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Dropwizard Riak</name>
@@ -82,7 +82,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <dropwizard.version>1.0.0-rc2</dropwizard.version>
+        <dropwizard.version>1.0.0-rc3</dropwizard.version>
         <riak.version>2.0.6</riak.version>
     </properties>
 
