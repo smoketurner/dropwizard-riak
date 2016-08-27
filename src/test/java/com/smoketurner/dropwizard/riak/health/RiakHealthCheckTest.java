@@ -29,6 +29,7 @@ import com.basho.riak.client.api.RiakClient;
 import com.basho.riak.client.core.RiakCluster;
 import com.basho.riak.client.core.operations.PingOperation;
 import com.codahale.metrics.health.HealthCheck.Result;
+import io.dropwizard.util.Duration;
 
 public class RiakHealthCheckTest {
 
@@ -39,7 +40,7 @@ public class RiakHealthCheckTest {
     @Before
     public void setUp() throws Exception {
         when(client.getRiakCluster()).thenReturn(cluster);
-        check = new RiakHealthCheck(client);
+        check = new RiakHealthCheck(client, Duration.milliseconds(1));
     }
 
     @After

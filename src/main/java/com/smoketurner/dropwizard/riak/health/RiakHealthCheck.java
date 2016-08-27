@@ -16,31 +16,46 @@
 package com.smoketurner.dropwizard.riak.health;
 
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 import com.basho.riak.client.api.RiakClient;
 import com.basho.riak.client.core.operations.PingOperation;
 import com.codahale.metrics.health.HealthCheck;
+import io.dropwizard.util.Duration;
 
 public class RiakHealthCheck extends HealthCheck {
 
     private final RiakClient client;
+    private final Duration timeout;
+
+    /**
+     * Constructor with a default ping timeout of 1 second
+     *
+     * @param client
+     *            Riak client
+     */
+    public RiakHealthCheck(@Nonnull final RiakClient client) {
+        this(client, Duration.seconds(1));
+    }
 
     /**
      * Constructor
      *
      * @param client
      *            Riak client
+     * @param timeout
+     *            Ping timeout
      */
-    public RiakHealthCheck(@Nonnull final RiakClient client) {
+    public RiakHealthCheck(@Nonnull final RiakClient client,
+            @Nonnull final Duration timeout) {
         this.client = Objects.requireNonNull(client);
+        this.timeout = Objects.requireNonNull(timeout);
     }
 
     @Override
     protected Result check() throws Exception {
         final PingOperation ping = new PingOperation();
         client.getRiakCluster().execute(ping);
-        ping.await(1, TimeUnit.SECONDS);
+        ping.await(timeout.getQuantity(), timeout.getUnit());
 
         if (ping.isSuccess()) {
             return Result.healthy("Riak is healthly");
