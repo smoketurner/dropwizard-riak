@@ -15,10 +15,12 @@
  */
 package com.smoketurner.dropwizard.riak.config;
 
-import java.net.UnknownHostException;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -52,7 +54,13 @@ public class RiakConfiguration {
 
     private String password;
 
-    private String keyStore;
+    private String keyStoreFile;
+
+    private String keyStorePassword;
+
+    private String trustStoreFile;
+
+    private String trustStorePassword;
 
     @Min(1)
     private int minConnections = 10;
@@ -104,42 +112,72 @@ public class RiakConfiguration {
     }
 
     @JsonProperty
-    public String getKeyStore() {
-        return keyStore;
+    public String getKeyStoreFile() {
+        return keyStoreFile;
     }
 
     @JsonProperty
-    public void setKeyStore(final String keyStore) {
-        this.keyStore = keyStore;
+    public void setKeyStoreFile(final String filename) {
+        this.keyStoreFile = filename;
     }
 
     @JsonProperty
-    public Integer getMinConnections() {
+    public String getKeyStorePassword() {
+        return keyStorePassword;
+    }
+
+    @JsonProperty
+    public void setKeyStorePassword(final String password) {
+        this.keyStorePassword = password;
+    }
+
+    @JsonProperty
+    public String getTrustStoreFile() {
+        return trustStoreFile;
+    }
+
+    @JsonProperty
+    public void setTrustStoreFile(final String filename) {
+        this.trustStoreFile = filename;
+    }
+
+    @JsonProperty
+    public String getTrustStorePassword() {
+        return trustStorePassword;
+    }
+
+    @JsonProperty
+    public void setTrustStorePassword(final String password) {
+        this.trustStorePassword = password;
+    }
+
+    @JsonProperty
+    public int getMinConnections() {
         return minConnections;
     }
 
     @JsonProperty
-    public void setMinConnections(final Integer connections) {
+    public void setMinConnections(final int connections) {
         this.minConnections = connections;
     }
 
     @JsonProperty
-    public Integer getMaxConnections() {
+    public int getMaxConnections() {
         return maxConnections;
     }
 
     @JsonProperty
-    public void setMaxConnections(final Integer connections) {
+    public void setMaxConnections(final int connections) {
         this.maxConnections = connections;
     }
 
     @JsonProperty
-    public Integer getExecutionAttempts() {
+    public int getExecutionAttempts() {
         return executionAttempts;
     }
 
     @JsonProperty
-    public void setExecutionAttempts(final Integer attempts) {
+    public void setExecutionAttempts(final int attempts) {
         this.executionAttempts = attempts;
     }
 
@@ -165,7 +203,7 @@ public class RiakConfiguration {
 
     @JsonIgnore
     public RiakClient build(@Nonnull final Environment environment)
-            throws UnknownHostException, KeyStoreException {
+            throws Exception {
         Objects.requireNonNull(environment);
 
         final RiakNode.Builder builder = new RiakNode.Builder()
@@ -176,12 +214,41 @@ public class RiakConfiguration {
                 .withIdleTimeout(Ints.checkedCast(idleTimeout.toMilliseconds()))
                 .withBlockOnMaxConnections(blockOnMaxConnections);
 
-        if (!Strings.isNullOrEmpty(username) && !Strings.isNullOrEmpty(password)
-                && !Strings.isNullOrEmpty(keyStore)) {
-            // TODO finish keyStore implementation
-            final KeyStore keystore = KeyStore.getInstance("PKS");
-            builder.withAuth(username, password, keystore);
+        final KeyStore keyStore;
+        if (!Strings.isNullOrEmpty(keyStoreFile)) {
+            try (InputStream inputStream = new FileInputStream(keyStoreFile)) {
+                final CertificateFactory certFactory = CertificateFactory
+                        .getInstance("X.509");
+                final X509Certificate cert = (X509Certificate) certFactory
+                        .generateCertificate(inputStream);
+
+                keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+                if (!Strings.isNullOrEmpty(keyStorePassword)) {
+                    keyStore.load(null, keyStorePassword.toCharArray());
+                }
+                keyStore.setCertificateEntry("1", cert);
+            }
         }
+
+        final KeyStore trustStore;
+        if (!Strings.isNullOrEmpty(trustStoreFile)) {
+            try (InputStream inputStream = new FileInputStream(
+                    trustStoreFile)) {
+                final CertificateFactory certFactory = CertificateFactory
+                        .getInstance("X.509");
+                final X509Certificate caCert = (X509Certificate) certFactory
+                        .generateCertificate(inputStream);
+
+                trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+                if (!Strings.isNullOrEmpty(trustStorePassword)) {
+                    trustStore.load(null, trustStorePassword.toCharArray());
+                }
+                trustStore.setCertificateEntry("cacert", caCert);
+            }
+        }
+
+        builder.withAuth(username, password, trustStore, keyStore,
+                keyStorePassword);
 
         final List<RiakNode> nodes = new ArrayList<>();
         for (HostAndPort address : this.nodes) {
