@@ -83,7 +83,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <dropwizard.version>1.0.3</dropwizard.version>
-        <riak.version>2.0.8</riak.version>
+        <riak.version>2.1.0</riak.version>
     </properties>
 
     <dependencyManagement>
