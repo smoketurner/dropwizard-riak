@@ -42,5 +42,6 @@ public class RiakClusterManager implements Managed {
     @Override
     public void stop() throws Exception {
         cluster.shutdown();
+        cluster.cleanup();
     }
 }

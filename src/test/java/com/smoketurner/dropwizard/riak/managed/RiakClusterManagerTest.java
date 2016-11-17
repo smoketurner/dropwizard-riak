@@ -16,9 +16,11 @@
 package com.smoketurner.dropwizard.riak.managed;
 
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import org.junit.Test;
+import org.mockito.InOrder;
 import com.basho.riak.client.core.RiakCluster;
 
 public class RiakClusterManagerTest {
@@ -44,6 +46,8 @@ public class RiakClusterManagerTest {
     @Test
     public void testStop() throws Exception {
         manager.stop();
-        verify(cluster).shutdown();
+        final InOrder inOrder = inOrder(cluster);
+        inOrder.verify(cluster).shutdown();
+        inOrder.verify(cluster).cleanup();
     }
 }
