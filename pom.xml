@@ -7,7 +7,7 @@
 
     <groupId>com.smoketurner.dropwizard</groupId>
     <artifactId>dropwizard-riak</artifactId>
-    <version>1.0.3-2-SNAPSHOT</version>
+    <version>1.0.5-1</version>
     <packaging>jar</packaging>
 
     <name>Dropwizard Riak</name>
@@ -26,7 +26,7 @@
         <developerConnection>scm:git:git@github.com:smoketurner/dropwizard-riak.git</developerConnection>
         <connection>scm:git:https://github.com/smoketurner/dropwizard-riak.git</connection>
         <url>https://github.com/smoketurner/dropwizard-riak</url>
-        <tag>HEAD</tag>
+        <tag>v1.0.5-1</tag>
     </scm>
 
     <ciManagement>
