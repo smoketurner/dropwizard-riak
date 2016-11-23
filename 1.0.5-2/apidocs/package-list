@@ -1,0 +1,3 @@
+com.smoketurner.dropwizard.riak.config
+com.smoketurner.dropwizard.riak.health
+com.smoketurner.dropwizard.riak.managed
