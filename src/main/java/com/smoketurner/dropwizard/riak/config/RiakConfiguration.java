@@ -24,9 +24,9 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -44,7 +44,6 @@ import com.smoketurner.dropwizard.riak.managed.RiakClusterManager;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.util.Duration;
 import io.dropwizard.validation.MinDuration;
-import io.dropwizard.validation.ValidationMethod;
 
 public class RiakConfiguration {
 
@@ -228,82 +227,85 @@ public class RiakConfiguration {
         this.connectionTimeout = timeout;
     }
 
-    @ValidationMethod(message = "keyStorePath should not be null")
-    public boolean isValidKeyStorePath() {
-        return keyStoreType.startsWith("Windows-") || keyStorePath != null;
-    }
-
-    @ValidationMethod(message = "keyStorePassword should not be null or empty")
-    public boolean isValidKeyStorePassword() {
-        return keyStoreType.startsWith("Windows-") || !Strings.isNullOrEmpty(keyStorePassword);
-    }
-
     @JsonIgnore
-    public RiakClient build(@Nonnull final Environment environment) throws Exception {
-        Objects.requireNonNull(environment);
-
-        final RiakNode.Builder builder = new RiakNode.Builder().withMinConnections(minConnections)
+    public RiakClient build(@Nonnull final Environment environment)
+            throws Exception {
+        final RiakNode.Builder builder = new RiakNode.Builder()
+                .withMinConnections(minConnections)
                 .withMaxConnections(maxConnections)
-                .withConnectionTimeout(Ints.checkedCast(connectionTimeout.toMilliseconds()))
+                .withConnectionTimeout(
+                        Ints.checkedCast(connectionTimeout.toMilliseconds()))
                 .withIdleTimeout(Ints.checkedCast(idleTimeout.toMilliseconds()))
                 .withBlockOnMaxConnections(blockOnMaxConnections);
 
         final KeyStore keyStore = getKeyStore();
         final KeyStore trustStore = getTrustStore();
 
-        builder.withAuth(username, password, trustStore, keyStore, keyStorePassword);
+        builder.withAuth(username, password, trustStore, keyStore,
+                keyStorePassword);
 
         final List<RiakNode> nodes = new ArrayList<>();
         for (HostAndPort address : this.nodes) {
-            final RiakNode node = builder.withRemoteAddress(address.getHostText())
-                    .withRemotePort(address.getPortOrDefault(RiakNode.Builder.DEFAULT_REMOTE_PORT)).build();
+            final RiakNode node = builder
+                    .withRemoteAddress(address.getHostText())
+                    .withRemotePort(address.getPortOrDefault(
+                            RiakNode.Builder.DEFAULT_REMOTE_PORT))
+                    .build();
             nodes.add(node);
         }
 
         DefaultCharset.set(StandardCharsets.UTF_8);
 
-        final RiakCluster cluster = RiakCluster.builder(nodes).withExecutionAttempts(executionAttempts).build();
+        final RiakCluster cluster = RiakCluster.builder(nodes)
+                .withExecutionAttempts(executionAttempts).build();
         environment.lifecycle().manage(new RiakClusterManager(cluster));
 
         final RiakClient client = new RiakClient(cluster);
-        environment.healthChecks().register("riak", new RiakHealthCheck(client));
+        environment.healthChecks().register("riak",
+                new RiakHealthCheck(client));
         return client;
     }
 
+    @Nullable
     private KeyStore getKeyStore() throws Exception {
-        final KeyStore keyStore;
-        if (!Strings.isNullOrEmpty(keyStorePath)) {
-            try (InputStream inputStream = new FileInputStream(keyStorePath)) {
-                final CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
-                final X509Certificate cert = (X509Certificate) certFactory.generateCertificate(inputStream);
+        if (Strings.isNullOrEmpty(keyStorePath)) {
+            return null;
+        }
 
-                keyStore = KeyStore.getInstance(keyStoreType);
-                if (!Strings.isNullOrEmpty(keyStorePassword)) {
-                    keyStore.load(null, keyStorePassword.toCharArray());
-                }
-                keyStore.setCertificateEntry("1", cert);
+        final KeyStore keyStore;
+        try (InputStream inputStream = new FileInputStream(keyStorePath)) {
+            final CertificateFactory certFactory = CertificateFactory
+                    .getInstance("X.509");
+            final X509Certificate cert = (X509Certificate) certFactory
+                    .generateCertificate(inputStream);
+
+            keyStore = KeyStore.getInstance(keyStoreType);
+            if (!Strings.isNullOrEmpty(keyStorePassword)) {
+                keyStore.load(null, keyStorePassword.toCharArray());
             }
-        } else {
-            keyStore = null;
+            keyStore.setCertificateEntry("1", cert);
         }
         return keyStore;
     }
 
+    @Nullable
     private KeyStore getTrustStore() throws Exception {
-        KeyStore trustStore;
-        if (!Strings.isNullOrEmpty(trustStorePath)) {
-            try (InputStream inputStream = new FileInputStream(trustStorePath)) {
-                final CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
-                final X509Certificate caCert = (X509Certificate) certFactory.generateCertificate(inputStream);
+        if (Strings.isNullOrEmpty(trustStorePath)) {
+            return null;
+        }
 
-                trustStore = KeyStore.getInstance(trustStoreType);
-                if (!Strings.isNullOrEmpty(trustStorePassword)) {
-                    trustStore.load(null, trustStorePassword.toCharArray());
-                }
-                trustStore.setCertificateEntry("cacert", caCert);
+        final KeyStore trustStore;
+        try (InputStream inputStream = new FileInputStream(trustStorePath)) {
+            final CertificateFactory certFactory = CertificateFactory
+                    .getInstance("X.509");
+            final X509Certificate caCert = (X509Certificate) certFactory
+                    .generateCertificate(inputStream);
+
+            trustStore = KeyStore.getInstance(trustStoreType);
+            if (!Strings.isNullOrEmpty(trustStorePassword)) {
+                trustStore.load(null, trustStorePassword.toCharArray());
             }
-        } else {
-            trustStore = null;
+            trustStore.setCertificateEntry("cacert", caCert);
         }
         return trustStore;
     }
