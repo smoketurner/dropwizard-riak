@@ -17,31 +17,33 @@ package com.smoketurner.dropwizard.riak.managed;
 
 import java.util.Objects;
 import javax.annotation.Nonnull;
-import com.basho.riak.client.core.RiakCluster;
+import com.basho.riak.client.api.RiakClient;
 import io.dropwizard.lifecycle.Managed;
+import io.dropwizard.util.Duration;
 
-public class RiakClusterManager implements Managed {
+public class RiakClientManager implements Managed {
 
-    private final RiakCluster cluster;
+    private static final Duration timeout = Duration.seconds(5);
+    private final RiakClient client;
 
     /**
      * Constructor
      *
-     * @param cluster
-     *            Riak cluster instance to manage
+     * @param client
+     *            Riak client instance to manage
      */
-    public RiakClusterManager(@Nonnull final RiakCluster cluster) {
-        this.cluster = Objects.requireNonNull(cluster);
+    public RiakClientManager(@Nonnull final RiakClient client) {
+        this.client = Objects.requireNonNull(client);
     }
 
     @Override
     public void start() throws Exception {
-        cluster.start();
+        client.getRiakCluster().start();
     }
 
     @Override
     public void stop() throws Exception {
-        cluster.shutdown();
-        cluster.cleanup();
+        client.shutdown().get(timeout.getQuantity(), timeout.getUnit());
+        client.cleanup();
     }
 }

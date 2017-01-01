@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.smoketurner.dropwizard.riak.config;
+package com.smoketurner.dropwizard.riak;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import javax.annotation.Nonnull;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.Nullable;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -39,13 +39,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import com.google.common.net.HostAndPort;
 import com.google.common.primitives.Ints;
-import com.smoketurner.dropwizard.riak.health.RiakHealthCheck;
-import com.smoketurner.dropwizard.riak.managed.RiakClusterManager;
-import io.dropwizard.setup.Environment;
 import io.dropwizard.util.Duration;
 import io.dropwizard.validation.MinDuration;
 
-public class RiakConfiguration {
+public class RiakFactory {
+
+    private final AtomicReference<RiakClient> clientRef = new AtomicReference<>();
 
     @NotEmpty
     private List<HostAndPort> nodes = Collections.emptyList();
@@ -228,8 +227,11 @@ public class RiakConfiguration {
     }
 
     @JsonIgnore
-    public RiakClient build(@Nonnull final Environment environment)
-            throws Exception {
+    public RiakClient build() throws Exception {
+        if (clientRef.get() != null) {
+            return clientRef.get();
+        }
+
         final RiakNode.Builder builder = new RiakNode.Builder()
                 .withMinConnections(minConnections)
                 .withMaxConnections(maxConnections)
@@ -258,11 +260,10 @@ public class RiakConfiguration {
 
         final RiakCluster cluster = RiakCluster.builder(nodes)
                 .withExecutionAttempts(executionAttempts).build();
-        environment.lifecycle().manage(new RiakClusterManager(cluster));
 
         final RiakClient client = new RiakClient(cluster);
-        environment.healthChecks().register("riak",
-                new RiakHealthCheck(client));
+        clientRef.compareAndSet(null, client);
+
         return client;
     }
 
