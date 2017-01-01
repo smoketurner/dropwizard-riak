@@ -5,7 +5,7 @@ Dropwizard Riak
 [![Maven Central](https://img.shields.io/maven-central/v/com.smoketurner.dropwizard/dropwizard-riak.svg?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/com.smoketurner.dropwizard/dropwizard-riak/)
 [![GitHub license](https://img.shields.io/github/license/smoketurner/dropwizard-riak.svg?style=flat-square)](https://github.com/smoketurner/dropwizard-riak/tree/master)
 
-`dropwizard-riak` is a [Dropwizard](http://dropwizard.io) bundle for interacting with [Riak](http://www.basho.com/riak) using the [riak-java-client](https://github.com/basho/riak-java-client).
+A bundle for accessing [Riak](http://www.basho.com/riak) in Dropwizard applications using [riak-java-client](https://github.com/basho/riak-java-client).
 
 Usage
 -----
@@ -15,22 +15,30 @@ Within your `Configuration` class, add the following:
 ```java
 @Valid
 @NotNull
-@JsonProperty
-private final RiakConfiguration riak = new RiakConfiguration();
+private final RiakFactory riak = new RiakFactory();
 
 @JsonProperty
-public RiakConfiguration getRiak() {
+public RiakFactory getRiakFactory() {
     return riak;
 }
 ```
 
-Then with your `Application` class' `run()` method, you can access a `RiakClient` by doing the following:
+Then with your `Application` class, you can access a `RiakClient` by doing the following:
 
 ```java
 @Override
+public void initialize(Bootstrap<MyConfiguration> bootstrap) {
+    bootstrap.addBundle(new RiakBundle<MyConfiguration>() {
+        @Override
+        public RiakFactory getRiakFactory(MyConfiguration configuration) {
+            return configuration.getRiakFactory();
+        }
+    });
+}
+
+@Override
 public void run(MyConfiguration configuration, Environment environment) throws Exception {
-    RiakConfiguration riakConfig = configuration.getRiak();
-    RiakClient client = riakConfig.build(environment);
+    RiakClient client = configuration.getRiakFactory().build();
 }
 ```
 
@@ -43,7 +51,7 @@ This project is available on Maven Central. To add it to your project simply add
 <dependency>
     <groupId>com.smoketurner.dropwizard</groupId>
     <artifactId>dropwizard-riak</artifactId>
-    <version>1.0.5-3</version>
+    <version>1.0.5-4</version>
 </dependency>
 ```
 
