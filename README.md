@@ -5,9 +5,7 @@ Dropwizard Riak
 [![Maven Central](https://img.shields.io/maven-central/v/com.smoketurner.dropwizard/dropwizard-riak.svg?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/com.smoketurner.dropwizard/dropwizard-riak/)
 [![GitHub license](https://img.shields.io/github/license/smoketurner/dropwizard-riak.svg?style=flat-square)](https://github.com/smoketurner/dropwizard-riak/tree/master)
 
-
 `dropwizard-riak` is a [Dropwizard](http://dropwizard.io) bundle for interacting with [Riak](http://www.basho.com/riak) using the [riak-java-client](https://github.com/basho/riak-java-client).
-
 
 Usage
 -----
@@ -45,7 +43,7 @@ This project is available on Maven Central. To add it to your project simply add
 <dependency>
     <groupId>com.smoketurner.dropwizard</groupId>
     <artifactId>dropwizard-riak</artifactId>
-    <version>1.0.5-2</version>
+    <version>1.0.5-3</version>
 </dependency>
 ```
 
