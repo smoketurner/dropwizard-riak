@@ -248,8 +248,7 @@ public class RiakFactory {
 
         final List<RiakNode> nodes = new ArrayList<>();
         for (HostAndPort address : this.nodes) {
-            final RiakNode node = builder
-                    .withRemoteAddress(address.getHostText())
+            final RiakNode node = builder.withRemoteAddress(address.getHost())
                     .withRemotePort(address.getPortOrDefault(
                             RiakNode.Builder.DEFAULT_REMOTE_PORT))
                     .build();
