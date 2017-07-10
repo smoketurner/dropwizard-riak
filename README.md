@@ -5,7 +5,7 @@ Dropwizard Riak
 [![Maven Central](https://img.shields.io/maven-central/v/com.smoketurner.dropwizard/dropwizard-riak.svg?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/com.smoketurner.dropwizard/dropwizard-riak/)
 [![GitHub license](https://img.shields.io/github/license/smoketurner/dropwizard-riak.svg?style=flat-square)](https://github.com/smoketurner/dropwizard-riak/tree/master)
 
-A bundle for accessing [Riak](http://www.basho.com/riak) in Dropwizard applications using [riak-java-client](https://github.com/basho/riak-java-client).
+A bundle for accessing [Riak](http://basho.com/products/riak-kv/) in Dropwizard applications using [riak-java-client](https://github.com/basho/riak-java-client).
 
 Usage
 -----
