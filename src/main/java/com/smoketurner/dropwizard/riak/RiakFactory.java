@@ -49,19 +49,25 @@ public class RiakFactory {
     @NotEmpty
     private List<HostAndPort> nodes = Collections.emptyList();
 
+    @Nullable
     private String username;
 
+    @Nullable
     private String password;
 
+    @Nullable
     private String keyStorePath;
 
+    @Nullable
     private String keyStorePassword;
 
     @NotEmpty
     private String keyStoreType = "JKS";
 
+    @Nullable
     private String trustStorePath;
 
+    @Nullable
     private String trustStorePassword;
 
     @NotEmpty
@@ -96,43 +102,47 @@ public class RiakFactory {
         this.nodes = nodes;
     }
 
+    @Nullable
     @JsonProperty
     public String getUsername() {
         return username;
     }
 
     @JsonProperty
-    public void setUsername(final String username) {
+    public void setUsername(@Nullable final String username) {
         this.username = username;
     }
 
+    @Nullable
     @JsonProperty
     public String getPassword() {
         return password;
     }
 
     @JsonProperty
-    public void setPassword(final String password) {
+    public void setPassword(@Nullable final String password) {
         this.password = password;
     }
 
+    @Nullable
     @JsonProperty
     public String getKeyStorePath() {
         return keyStorePath;
     }
 
     @JsonProperty
-    public void setKeyStorePath(final String filename) {
+    public void setKeyStorePath(@Nullable final String filename) {
         this.keyStorePath = filename;
     }
 
+    @Nullable
     @JsonProperty
     public String getKeyStorePassword() {
         return keyStorePassword;
     }
 
     @JsonProperty
-    public void setKeyStorePassword(final String password) {
+    public void setKeyStorePassword(@Nullable final String password) {
         this.keyStorePassword = password;
     }
 
@@ -146,23 +156,25 @@ public class RiakFactory {
         this.keyStoreType = keyStoreType;
     }
 
+    @Nullable
     @JsonProperty
     public String getTrustStorePath() {
         return trustStorePath;
     }
 
     @JsonProperty
-    public void setTrustStorePath(final String filename) {
+    public void setTrustStorePath(@Nullable final String filename) {
         this.trustStorePath = filename;
     }
 
+    @Nullable
     @JsonProperty
     public String getTrustStorePassword() {
         return trustStorePassword;
     }
 
     @JsonProperty
-    public void setTrustStorePassword(final String password) {
+    public void setTrustStorePassword(@Nullable final String password) {
         this.trustStorePassword = password;
     }
 
