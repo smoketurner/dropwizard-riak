@@ -15,7 +15,6 @@
  */
 package com.smoketurner.dropwizard.riak.managed;
 
-import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -39,15 +38,6 @@ public class RiakClientManagerTest {
     @Before
     public void setUp() {
         when(client.getRiakCluster()).thenReturn(cluster);
-    }
-
-    @Test
-    public void testNullManager() throws Exception {
-        try {
-            new RiakClientManager(null);
-            failBecauseExceptionWasNotThrown(NullPointerException.class);
-        } catch (NullPointerException e) {
-        }
     }
 
     @Test
