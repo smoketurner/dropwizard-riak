@@ -355,11 +355,6 @@
                     <artifactId>site-maven-plugin</artifactId>
                     <version>0.12</version>
                 </plugin>
-                <plugin>
-                    <groupId>org.xolstice.maven.plugins</groupId>
-                    <artifactId>protobuf-maven-plugin</artifactId>
-                    <version>0.5.0</version>
-                </plugin>
             </plugins>
         </pluginManagement>
 
