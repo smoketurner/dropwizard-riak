@@ -51,7 +51,7 @@ This project is available on Maven Central. To add it to your project simply add
 <dependency>
     <groupId>com.smoketurner.dropwizard</groupId>
     <artifactId>dropwizard-riak</artifactId>
-    <version>1.2.2-1</version>
+    <version>1.2.3-1</version>
 </dependency>
 ```
 
