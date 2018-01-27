@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"com.smoketurner.dropwizard.riak"},{"l":"com.smoketurner.dropwizard.riak.health"},{"l":"com.smoketurner.dropwizard.riak.managed"}]
