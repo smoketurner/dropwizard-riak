@@ -1,11 +1,11 @@
-/**
- * Copyright 2018 Smoke Turner, LLC.
+/*
+ * Copyright © 2018 Smoke Turner, LLC (contact@smoketurner.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,51 +15,47 @@
  */
 package com.smoketurner.dropwizard.riak.health;
 
-import java.util.Objects;
-import javax.annotation.Nonnull;
 import com.basho.riak.client.api.RiakClient;
 import com.basho.riak.client.core.operations.PingOperation;
 import com.codahale.metrics.health.HealthCheck;
 import io.dropwizard.util.Duration;
+import java.util.Objects;
+import javax.annotation.Nonnull;
 
 public class RiakHealthCheck extends HealthCheck {
 
-    private final RiakClient client;
-    private final Duration timeout;
+  private final RiakClient client;
+  private final Duration timeout;
 
-    /**
-     * Constructor with a default ping timeout of 1 second
-     *
-     * @param client
-     *            Riak client
-     */
-    public RiakHealthCheck(@Nonnull final RiakClient client) {
-        this(client, Duration.seconds(1));
+  /**
+   * Constructor with a default ping timeout of 1 second
+   *
+   * @param client Riak client
+   */
+  public RiakHealthCheck(@Nonnull final RiakClient client) {
+    this(client, Duration.seconds(1));
+  }
+
+  /**
+   * Constructor
+   *
+   * @param client Riak client
+   * @param timeout Ping timeout
+   */
+  public RiakHealthCheck(@Nonnull final RiakClient client, @Nonnull final Duration timeout) {
+    this.client = Objects.requireNonNull(client);
+    this.timeout = Objects.requireNonNull(timeout);
+  }
+
+  @Override
+  protected Result check() throws Exception {
+    final PingOperation ping = new PingOperation();
+    client.getRiakCluster().execute(ping);
+    ping.await(timeout.getQuantity(), timeout.getUnit());
+
+    if (ping.isSuccess()) {
+      return Result.healthy("Riak is healthly");
     }
-
-    /**
-     * Constructor
-     *
-     * @param client
-     *            Riak client
-     * @param timeout
-     *            Ping timeout
-     */
-    public RiakHealthCheck(@Nonnull final RiakClient client,
-            @Nonnull final Duration timeout) {
-        this.client = Objects.requireNonNull(client);
-        this.timeout = Objects.requireNonNull(timeout);
-    }
-
-    @Override
-    protected Result check() throws Exception {
-        final PingOperation ping = new PingOperation();
-        client.getRiakCluster().execute(ping);
-        ping.await(timeout.getQuantity(), timeout.getUnit());
-
-        if (ping.isSuccess()) {
-            return Result.healthy("Riak is healthly");
-        }
-        return Result.unhealthy("Riak is down");
-    }
+    return Result.unhealthy("Riak is down");
+  }
 }

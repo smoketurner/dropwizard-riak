@@ -1,11 +1,11 @@
-/**
- * Copyright 2018 Smoke Turner, LLC.
+/*
+ * Copyright © 2018 Smoke Turner, LLC (contact@smoketurner.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,35 +15,34 @@
  */
 package com.smoketurner.dropwizard.riak.managed;
 
-import java.util.Objects;
-import javax.annotation.Nonnull;
 import com.basho.riak.client.api.RiakClient;
 import io.dropwizard.lifecycle.Managed;
 import io.dropwizard.util.Duration;
+import java.util.Objects;
+import javax.annotation.Nonnull;
 
 public class RiakClientManager implements Managed {
 
-    private static final Duration timeout = Duration.seconds(5);
-    private final RiakClient client;
+  private static final Duration timeout = Duration.seconds(5);
+  private final RiakClient client;
 
-    /**
-     * Constructor
-     *
-     * @param client
-     *            Riak client instance to manage
-     */
-    public RiakClientManager(@Nonnull final RiakClient client) {
-        this.client = Objects.requireNonNull(client);
-    }
+  /**
+   * Constructor
+   *
+   * @param client Riak client instance to manage
+   */
+  public RiakClientManager(@Nonnull final RiakClient client) {
+    this.client = Objects.requireNonNull(client);
+  }
 
-    @Override
-    public void start() throws Exception {
-        client.getRiakCluster().start();
-    }
+  @Override
+  public void start() throws Exception {
+    client.getRiakCluster().start();
+  }
 
-    @Override
-    public void stop() throws Exception {
-        client.shutdown().get(timeout.getQuantity(), timeout.getUnit());
-        client.cleanup();
-    }
+  @Override
+  public void stop() throws Exception {
+    client.shutdown().get(timeout.getQuantity(), timeout.getUnit());
+    client.cleanup();
+  }
 }
