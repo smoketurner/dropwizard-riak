@@ -15,6 +15,17 @@
  */
 package com.smoketurner.dropwizard.riak;
 
+import com.basho.riak.client.api.RiakClient;
+import com.basho.riak.client.core.RiakCluster;
+import com.basho.riak.client.core.RiakNode;
+import com.basho.riak.client.core.util.DefaultCharset;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
+import com.google.common.net.HostAndPort;
+import com.google.common.primitives.Ints;
+import io.dropwizard.util.Duration;
+import io.dropwizard.validation.MinDuration;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -30,17 +41,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jetbrains.annotations.Nullable;
-import com.basho.riak.client.api.RiakClient;
-import com.basho.riak.client.core.RiakCluster;
-import com.basho.riak.client.core.RiakNode;
-import com.basho.riak.client.core.util.DefaultCharset;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Strings;
-import com.google.common.net.HostAndPort;
-import com.google.common.primitives.Ints;
-import io.dropwizard.util.Duration;
-import io.dropwizard.validation.MinDuration;
 
 public class RiakFactory {
 
