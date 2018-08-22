@@ -19,7 +19,7 @@ import com.basho.riak.client.api.RiakClient;
 import io.dropwizard.lifecycle.Managed;
 import io.dropwizard.util.Duration;
 import java.util.Objects;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class RiakClientManager implements Managed {
 
@@ -31,7 +31,7 @@ public class RiakClientManager implements Managed {
    *
    * @param client Riak client instance to manage
    */
-  public RiakClientManager(@Nonnull final RiakClient client) {
+  public RiakClientManager(@NotNull final RiakClient client) {
     this.client = Objects.requireNonNull(client);
   }
 

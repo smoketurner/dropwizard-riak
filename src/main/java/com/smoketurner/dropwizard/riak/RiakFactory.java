@@ -32,15 +32,15 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
-import javax.annotation.Nullable;
+import java.util.stream.Collectors;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.jetbrains.annotations.Nullable;
 
 public class RiakFactory {
 
@@ -248,15 +248,17 @@ public class RiakFactory {
 
     builder.withAuth(username, password, trustStore, keyStore, keyStorePassword);
 
-    final List<RiakNode> nodes = new ArrayList<>();
-    for (HostAndPort address : this.nodes) {
-      final RiakNode node =
-          builder
-              .withRemoteAddress(address.getHost())
-              .withRemotePort(address.getPortOrDefault(RiakNode.Builder.DEFAULT_REMOTE_PORT))
-              .build();
-      nodes.add(node);
-    }
+    final List<RiakNode> nodes =
+        this.nodes
+            .stream()
+            .map(
+                address ->
+                    builder
+                        .withRemoteAddress(address.getHost())
+                        .withRemotePort(
+                            address.getPortOrDefault(RiakNode.Builder.DEFAULT_REMOTE_PORT))
+                        .build())
+            .collect(Collectors.toList());
 
     DefaultCharset.set(StandardCharsets.UTF_8);
 

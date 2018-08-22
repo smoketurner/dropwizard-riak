@@ -20,7 +20,7 @@ import com.basho.riak.client.core.operations.PingOperation;
 import com.codahale.metrics.health.HealthCheck;
 import io.dropwizard.util.Duration;
 import java.util.Objects;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class RiakHealthCheck extends HealthCheck {
 
@@ -32,7 +32,7 @@ public class RiakHealthCheck extends HealthCheck {
    *
    * @param client Riak client
    */
-  public RiakHealthCheck(@Nonnull final RiakClient client) {
+  public RiakHealthCheck(@NotNull final RiakClient client) {
     this(client, Duration.seconds(1));
   }
 
@@ -42,7 +42,7 @@ public class RiakHealthCheck extends HealthCheck {
    * @param client Riak client
    * @param timeout Ping timeout
    */
-  public RiakHealthCheck(@Nonnull final RiakClient client, @Nonnull final Duration timeout) {
+  public RiakHealthCheck(@NotNull final RiakClient client, @NotNull final Duration timeout) {
     this.client = Objects.requireNonNull(client);
     this.timeout = Objects.requireNonNull(timeout);
   }
