@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import com.google.common.net.HostAndPort;
 import com.google.common.primitives.Ints;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import io.dropwizard.util.Duration;
 import io.dropwizard.validation.MinDuration;
 import java.io.FileInputStream;
@@ -40,7 +41,6 @@ import java.util.stream.Collectors;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.jetbrains.annotations.Nullable;
 
 public class RiakFactory {
 
@@ -266,9 +266,11 @@ public class RiakFactory {
         RiakCluster.builder(nodes).withExecutionAttempts(executionAttempts).build();
 
     final RiakClient client = new RiakClient(cluster);
-    clientRef.compareAndSet(null, client);
+    if (clientRef.compareAndSet(null, client)) {
+      return client;
+    }
 
-    return client;
+    return build();
   }
 
   @Nullable
