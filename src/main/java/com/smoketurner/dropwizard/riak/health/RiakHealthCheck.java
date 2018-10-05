@@ -18,7 +18,6 @@ package com.smoketurner.dropwizard.riak.health;
 import com.basho.riak.client.api.RiakClient;
 import com.basho.riak.client.core.operations.PingOperation;
 import com.codahale.metrics.health.HealthCheck;
-import edu.umd.cs.findbugs.annotations.NonNull;
 import io.dropwizard.util.Duration;
 import java.util.Objects;
 
@@ -32,7 +31,7 @@ public class RiakHealthCheck extends HealthCheck {
    *
    * @param client Riak client
    */
-  public RiakHealthCheck(@NonNull final RiakClient client) {
+  public RiakHealthCheck(final RiakClient client) {
     this(client, Duration.seconds(1));
   }
 
@@ -42,7 +41,7 @@ public class RiakHealthCheck extends HealthCheck {
    * @param client Riak client
    * @param timeout Ping timeout
    */
-  public RiakHealthCheck(@NonNull final RiakClient client, @NonNull final Duration timeout) {
+  public RiakHealthCheck(final RiakClient client, final Duration timeout) {
     this.client = Objects.requireNonNull(client);
     this.timeout = Objects.requireNonNull(timeout);
   }

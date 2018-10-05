@@ -16,7 +16,6 @@
 package com.smoketurner.dropwizard.riak.managed;
 
 import com.basho.riak.client.api.RiakClient;
-import edu.umd.cs.findbugs.annotations.NonNull;
 import io.dropwizard.lifecycle.Managed;
 import io.dropwizard.util.Duration;
 import java.util.Objects;
@@ -31,7 +30,7 @@ public class RiakClientManager implements Managed {
    *
    * @param client Riak client instance to manage
    */
-  public RiakClientManager(@NonNull final RiakClient client) {
+  public RiakClientManager(final RiakClient client) {
     this.client = Objects.requireNonNull(client);
   }
 
